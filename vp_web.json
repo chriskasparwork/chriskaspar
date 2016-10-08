@@ -1,0 +1,89 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Project": {
+            "defaultValue": "cpswebapp",
+            "type": "String"
+        } 
+    },
+    "variables": {
+         
+        "components_cpswebapp_name":  "[parameters('Project')]" ,
+        "serverfarms_cpswebappasp_name":  "[concat(parameters('Project'), 'asp')]", 
+        "sites_cpswebapp_name":  "[parameters('Project')]" 
+        
+
+    },
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/b147745f-bb85-46fc-b7cb-e526a991c2e9/resourceGroups/cps-Web/providers/microsoft.insights/components/cpswebapp'.",
+            "type": "microsoft.insights/components",
+            "kind": "web",
+            "name": "[variables('components_cpswebapp_name')]",
+            "apiVersion": "2014-04-01",
+            "location": "Central US",
+            "tags": {
+                "hidden-link:/subscriptions/b147745f-bb85-46fc-b7cb-e526a991c2e9/resourceGroups/cps-Web/providers/Microsoft.Web/sites/cpswebapp": "Resource"
+            },
+            "properties": {
+                "ApplicationId": "[variables('components_cpswebapp_name')]"
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b147745f-bb85-46fc-b7cb-e526a991c2e9/resourceGroups/cps-Web/providers/Microsoft.Web/serverfarms/cpswebappasp'.",
+            "type": "Microsoft.Web/serverfarms",
+            "sku": {
+                "name": "S1",
+                "tier": "Standard",
+                "size": "S1",
+                "family": "S",
+                "capacity": 1
+            },
+            "name": "[variables('serverfarms_cpswebappasp_name')]",
+            "apiVersion": "2015-08-01",
+            "location": "North Central US",
+            "properties": {
+                "name": "[variables('serverfarms_cpswebappasp_name')]",
+                "numberOfWorkers": 1
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/b147745f-bb85-46fc-b7cb-e526a991c2e9/resourceGroups/cps-Web/providers/Microsoft.Web/sites/cpswebapp'.",
+            "type": "Microsoft.Web/sites",
+            "name": "[variables('sites_cpswebapp_name')]",
+            "apiVersion": "2015-08-01",
+            "location": "North Central US",
+            "tags": {
+                "hidden-related:/subscriptions/b147745f-bb85-46fc-b7cb-e526a991c2e9/resourcegroups/cps-Web/providers/Microsoft.Web/serverfarms/cpswebappasp": "empty"
+            },
+            "properties": {
+                "name": "[variables('sites_cpswebapp_name')]",
+          
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(variables('sites_cpswebapp_name'),'.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    },
+                    {
+                        "name": "[concat(variables('sites_cpswebapp_name'),'.scm.azurewebsites.net')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_cpswebappasp_name'))]"
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_cpswebappasp_name'))]"
+            ]
+        }
+    ]
+}
